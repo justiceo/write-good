@@ -82,6 +82,14 @@ function reasonable(text, reason) {
   };
 }
 
+function typed(checkName) {
+  return function typedSuggestion(suggestion) {
+    // eslint-disable-next-line no-param-reassign
+    suggestion.type = checkName;
+    return suggestion;
+  };
+}
+
 module.exports = function writeGood(text, opts = {}) {
   const finalOpts = {};
   const defaultOpts = Object.assign({}, disabledChecks, opts);
@@ -100,6 +108,7 @@ module.exports = function writeGood(text, opts = {}) {
         finalChecks[checkName]
           .fn(text)
           .map(reasonable(text, finalChecks[checkName].explanation))
+          .map(typed(checkName))
       );
     }
   });
